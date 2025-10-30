@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ArticleController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::middleware(['throttle:60,1'])->group(function () {
+    Route::get('articles', [ArticleController::class, 'index']);
+    Route::get('articles/{article}', [ArticleController::class, 'show']);
+    Route::get('sources', [ArticleController::class, 'sources']);
+    Route::get('categories', [ArticleController::class, 'categories']);
+});

@@ -8,7 +8,7 @@ class Article extends Model
 {
     protected $fillable = [
         'source_id','author_id','category_id','external_id','title','description',
-        'content','url','image_url','published_at','language','raw'
+        'content','url','image_url','published_at','language','raw', 'publisher_id'
     ];
 
     protected $casts = [
@@ -19,4 +19,5 @@ class Article extends Model
     public function source() { return $this->belongsTo(Source::class); }
     public function author() { return $this->belongsTo(Author::class); }
     public function category() { return $this->belongsTo(Category::class); }
+    public function publisher() { return $this->belongsTo(Publisher::class); }
 }
