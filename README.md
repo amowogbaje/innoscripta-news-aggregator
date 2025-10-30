@@ -1,59 +1,192 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📰 Laravel News Aggregator
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modern, modular **News Aggregation API** built with Laravel that fetches, normalizes, and stores real-time news from multiple trusted sources like **The Guardian**, **The New York Times**, and **NewsAPI**.
 
-## About Laravel
+> Designed for scalability, clean architecture, and extensibility — this project exemplifies premium Laravel engineering principles.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* 🔁 Scheduled synchronization from multiple news sources
+* 🧩 Adapter pattern for source-specific integrations
+* 🧠 Intelligent duplicate detection
+* 🗂 Category, Author, and Publisher management
+* 🧵 Modular, service-driven architecture (`NewsSyncService`)
+* ⚡ RESTful API with filtering, pagination, and rate limiting
+* 💾 Robust error handling and transactional consistency
+* 🧱 Eloquent Resources for clean, structured JSON responses
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 🧰 Tech Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Component           | Technology               |
+| ------------------- | ------------------------ |
+| Framework           | Laravel 11.x             |
+| Language            | PHP 8.2+                 |
+| HTTP Client         | Guzzle                   |
+| Database            | MySQL / PostgreSQL       |
+| Scheduler           | Laravel Scheduler / Cron |
+| Testing             | PHPUnit                  |
+| API Auth (optional) | Laravel Sanctum          |
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🧩 Architecture Overview
 
-### Premium Partners
+```
+app/
+ ├── Console/
+ │   └── Commands/NewsSyncCommand.php
+ ├── Http/
+ │   ├── Controllers/Api/ArticleController.php
+ │   └── Resources/
+ │       ├── ArticleResource.php
+ │       ├── SourceResource.php
+ │       └── PublisherResource.php
+ ├── Models/
+ │   ├── Article.php
+ │   ├── Author.php
+ │   ├── Category.php
+ │   ├── Publisher.php
+ │   └── Source.php
+ ├── Services/
+ │   └── News/
+ │       ├── Adapters/
+ │       │   ├── GuardianAdapter.php
+ │       │   ├── NewsApiAdapter.php
+ │       │   └── NytimesAdapter.php
+ │       ├── Contracts/NewsSourceInterface.php
+ │       └── NewsSyncService.php
+ └── ...
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## ⚙️ Installation
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+# 1️⃣ Clone the repository
+git clone https://github.com/amowogbaje/innoscripta-news-aggregator.git
+cd innoscripta-news-aggregator
 
-## Code of Conduct
+# 2️⃣ Install dependencies
+composer install
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# 3️⃣ Configure environment
+cp .env.example .env
+php artisan key:generate
 
-## Security Vulnerabilities
+# 4️⃣ Set up your database
+php artisan migrate --seed
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🔑 Environment Configuration
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+In your `.env` file, add API credentials for your news providers:
+
+```env
+NEWSAPI_KEY=your_guardian_api_key
+GUARDIAN_KEY=your_nytimes_api_key
+NYTIMES_KEY=your_newsapi_key
+```
+
+And in `config/services.php`:
+
+```php
+'guardian' => ['key' => env('NEWS_GUARDIAN_KEY')],
+'nytimes' => ['key' => env('NEWS_NYTIMES_KEY')],
+'newsapi' => ['key' => env('NEWS_NEWSAPI_KEY')],
+```
+
+---
+
+## 🧭 Usage
+
+### ✅ Run a Sync Manually
+
+```bash
+php artisan news:sync guardian
+php artisan news:sync nytimes
+php artisan news:sync newsapi
+```
+
+
+
+### 🕒 Automatic Sync (Every 5 Minutes)
+
+Add this to your `app/Console/Kernel.php`:
+
+```php
+$schedule->command('news:sync guardian')->everyFiveMinutes();
+$schedule->command('news:sync nytimes')->everyFiveMinutes();
+$schedule->command('news:sync newsapi')->everyFiveMinutes();
+```
+
+Or simply put
+
+```php
+$schedule->command('news:sync')->everyFiveMinutes();
+```
+
+---
+
+## 🔍 API Endpoints
+
+| Method | Endpoint             | Description                    |
+| ------ | -------------------- | ------------------------------ |
+| `GET`  | `/api/articles`      | List all articles (filterable) |
+| `GET`  | `/api/articles/{id}` | View a single article          |
+| `GET`  | `/api/sources`       | Get available sources          |
+| `GET`  | `/api/categories`    | Get all categories             |
+
+### Query Filters
+
+```
+/api/articles?q=apple&source=guardian&category=technology&author=john&from=2025-10-28&to=2025-10-29
+```
+
+Supports:
+
+* `q` — Search in title, content, description
+* `source` — Filter by source slug
+* `category` — Filter by category slug
+* `author` — Filter by author name
+* `preferred_sources[]` — Filter by multiple sources/publishers
+
+---
+
+## 🔒 Rate Limiting
+
+Configured via Laravel’s throttle middleware:
+
+```php
+Route::middleware(['throttle:60,1'])->group(function () {
+    Route::get('articles', [ArticleController::class, 'index']);
+    Route::get('articles/{article}', [ArticleController::class, 'show']);
+    Route::get('sources', [ArticleController::class, 'sources']);
+    Route::get('categories', [ArticleController::class, 'categories']);
+});
+```
+
+This limits requests to **60 per minute per IP**.
+
+---
+
+## 📈 Future Enhancements
+
+* 🗞 Caching Layer for API responses
+* 📬 Webhook / Event broadcasting
+* 🕵🏽 Full-text search integration (e.g. Meilisearch / Scout)
+* 🧾 Advanced analytics dashboard
+* 🌍 Frontend dashboard with Next.js or Vue
+
+---
+
+## 👨🏽‍💻 Author
+
+**Gideon Amowogbaje**
+*Engineer | Laravel • NestJS*
