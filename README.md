@@ -23,13 +23,11 @@ A modern, modular **News Aggregation API** built with Laravel that fetches, norm
 
 | Component           | Technology               |
 | ------------------- | ------------------------ |
-| Framework           | Laravel 11.x             |
-| Language            | PHP 8.2+                 |
+| Framework           | Laravel 12.x             |
+| Language            | PHP 8.3+                 |
 | HTTP Client         | Guzzle                   |
 | Database            | MySQL / PostgreSQL       |
 | Scheduler           | Laravel Scheduler / Cron |
-| Testing             | PHPUnit                  |
-| API Auth (optional) | Laravel Sanctum          |
 
 ---
 
@@ -92,14 +90,6 @@ In your `.env` file, add API credentials for your news providers:
 NEWSAPI_KEY=your_guardian_api_key
 GUARDIAN_KEY=your_nytimes_api_key
 NYTIMES_KEY=your_newsapi_key
-```
-
-And in `config/services.php`:
-
-```php
-'guardian' => ['key' => env('NEWS_GUARDIAN_KEY')],
-'nytimes' => ['key' => env('NEWS_NYTIMES_KEY')],
-'newsapi' => ['key' => env('NEWS_NEWSAPI_KEY')],
 ```
 
 ---
